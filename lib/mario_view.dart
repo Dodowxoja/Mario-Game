@@ -8,13 +8,17 @@ class MarioView extends StatefulWidget {
 }
 
 class _MarioViewState extends State<MarioView> {
+  bool gameOver = false;
+  int ball = 0;
   double uzunlig = 0;
   double _sakrash = 1;
   double _containerYurishi = 1.6;
   @override
   void initState() {
     super.initState();
+    next();
     a(context);
+    ballMario();
   }
 
   @override
@@ -24,7 +28,7 @@ class _MarioViewState extends State<MarioView> {
         child: Column(
           children: [
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Container(
                 color: Colors.blue,
                 child: Stack(
@@ -50,57 +54,29 @@ class _MarioViewState extends State<MarioView> {
               ),
             ),
             Expanded(
-                child: Container(
-              color: Colors.green,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  //Chap
-                  InkWell(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.white,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.arrow_back),
-                    ),
-                    onTap: () {
-                      _containerYurishi -= 0.1;
-                      if (_containerYurishi <= -1.6) {
-                        _containerYurishi = 1.6;
-                        print(_containerYurishi);
-                      }
-                      a(context);
-                      setState(() {});
-                    },
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.green,
+                alignment: Alignment.center,
+                child: Text(
+                  "$ball",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
-                  //O'ng
-                  InkWell(
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.white,
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.arrow_forward),
-                    ),
-                    onTap: () {
-                      _containerYurishi += 0.1;
-
-                      a(context);
-                      setState(() {});
-                    },
-                  )
-                ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
         onTap: () async {
           a(context);
-          for (var i = 0; i < 20; i++) {
-            if (i < 10) {
+          for (var i = 0; i < 16; i++) {
+            if (i < 8) {
               await Future.delayed(
-                const Duration(milliseconds: 10),
+                const Duration(milliseconds: 100),
                 () {
                   _sakrash -= 0.1;
                   setState(() {});
@@ -108,7 +84,7 @@ class _MarioViewState extends State<MarioView> {
               );
             } else {
               await Future.delayed(
-                const Duration(milliseconds: 10),
+                const Duration(milliseconds: 100),
                 () {
                   _sakrash += 0.1;
                   a(context);
@@ -122,21 +98,68 @@ class _MarioViewState extends State<MarioView> {
     );
   }
 
+  next() async {
+    for (var i = 0; i <= i; i++) {
+      if (gameOver == false) {
+        await Future.delayed(const Duration(milliseconds: 200), () {
+          _containerYurishi -= 0.1;
+          if (_containerYurishi <= -1.6) {
+            _containerYurishi = 1.6;
+          }
+          a(context);
+        });
+      } else {
+        break;
+      }
+      setState(() {});
+    }
+  }
+
+  ballMario() async {
+    for (var i = 0; i <= ball; i++) {
+      if (gameOver == false) {
+        await Future.delayed(const Duration(milliseconds: 200), () {
+          ball += 1;
+          setState(() {});
+        });
+      } else {
+        break;
+      }
+    }
+  }
+
   a(BuildContext context) async {
-    print(_containerYurishi);
     if (_containerYurishi <= -0.35) {
       uzunlig = _containerYurishi;
       if (uzunlig >= -1) {
         if (_sakrash == 1) {
+          gameOver = true;
           showDialog(
             context: context,
             builder: (_) {
-              return const AlertDialog(
-                title: Text('Game Ower'),
+              return AlertDialog(
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text("GAME OWER"),
+                    Text('You Ball: $ball'),
+                    IconButton(
+                      color: Colors.green,
+                      icon: const Icon(Icons.refresh, size: 30),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const MarioView()),
+                            (route) => false);
+                      },
+                    )
+                  ],
+                ),
               );
             },
           );
-          print("GAME OWER");
+          setState(() {});
         }
       }
     }
