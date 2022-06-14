@@ -10,14 +10,13 @@ class MarioView extends StatefulWidget {
 class _MarioViewState extends State<MarioView> {
   bool gameOver = false;
   int ball = 0;
-  double uzunlig = 0;
-  double _sakrash = 1;
-  double _containerYurishi = 1.6;
+  double _jump = 1;
+  double _containerSpeed = 1.6;
   @override
   void initState() {
     super.initState();
     next();
-    a(context);
+    gameOverShowDialog(context);
     ballMario();
   }
 
@@ -35,7 +34,7 @@ class _MarioViewState extends State<MarioView> {
                   children: [
                     //mario
                     Container(
-                      alignment: Alignment(-0.7, _sakrash),
+                      alignment: Alignment(-0.7, _jump),
                       child: Image.asset(
                         'assets/images/run_forward.gif',
                         height: 100,
@@ -43,7 +42,7 @@ class _MarioViewState extends State<MarioView> {
                     ),
                     //Container
                     Align(
-                      alignment: Alignment(_containerYurishi, 1),
+                      alignment: Alignment(_containerSpeed, 1),
                       child: Image.asset(
                         'assets/images/mario_wall.png',
                         height: 80,
@@ -72,25 +71,29 @@ class _MarioViewState extends State<MarioView> {
           ],
         ),
         onTap: () async {
-          a(context);
+          gameOverShowDialog(context);
           for (var i = 0; i < 16; i++) {
-            if (i < 8) {
-              await Future.delayed(
-                const Duration(milliseconds: 100),
-                () {
-                  _sakrash -= 0.1;
-                  setState(() {});
-                },
-              );
+            if (gameOver == false) {
+              if (i < 8) {
+                await Future.delayed(
+                  const Duration(milliseconds: 100),
+                  () {
+                    _jump -= 0.1;
+                    setState(() {});
+                  },
+                );
+              } else {
+                await Future.delayed(
+                  const Duration(milliseconds: 100),
+                  () {
+                    _jump += 0.1;
+                    gameOverShowDialog(context);
+                    setState(() {});
+                  },
+                );
+              }
             } else {
-              await Future.delayed(
-                const Duration(milliseconds: 100),
-                () {
-                  _sakrash += 0.1;
-                  a(context);
-                  setState(() {});
-                },
-              );
+              break;
             }
           }
         },
@@ -102,11 +105,12 @@ class _MarioViewState extends State<MarioView> {
     for (var i = 0; i <= i; i++) {
       if (gameOver == false) {
         await Future.delayed(const Duration(milliseconds: 200), () {
-          _containerYurishi -= 0.1;
-          if (_containerYurishi <= -1.6) {
-            _containerYurishi = 1.6;
+          _containerSpeed -= 0.05;
+          // sakrashi
+          if (_containerSpeed <= -1.6) {
+            _containerSpeed = 1.6;
           }
-          a(context);
+          gameOverShowDialog(context);
         });
       } else {
         break;
@@ -128,11 +132,13 @@ class _MarioViewState extends State<MarioView> {
     }
   }
 
-  a(BuildContext context) async {
-    if (_containerYurishi <= -0.35) {
-      uzunlig = _containerYurishi;
-      if (uzunlig >= -1) {
-        if (_sakrash == 1) {
+  gameOverShowDialog(BuildContext context) async {
+    // kelib urilib teyib qolishi
+    if (_containerSpeed <= -0.35) {
+      // sakrab otvotkanda teyib qolishi
+      if (_containerSpeed >= -1) {
+        //sakraganda teyib qolishi
+        if (_jump >= 0.65) {
           gameOver = true;
           showDialog(
             context: context,
@@ -150,7 +156,8 @@ class _MarioViewState extends State<MarioView> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const MarioView()),
+                              builder: (_) => const MarioView(),
+                            ),
                             (route) => false);
                       },
                     )
