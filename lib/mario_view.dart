@@ -46,7 +46,7 @@ class _MarioViewState extends State<MarioView> {
                       alignment: Alignment(_containerYurishi, 1),
                       child: Image.asset(
                         'assets/images/mario_wall.png',
-                        height: 100,
+                        height: 80,
                       ),
                     ),
                   ],
