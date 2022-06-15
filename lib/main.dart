@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mario/mario_animation.dart';
-import 'package:mario/mario_view.dart';
+// import 'package:mario/mario_view.dart';
 
 void main() {
   runApp(const MyApp());
