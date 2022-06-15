@@ -1,1 +1,1 @@
-<img src="./screenshots/game over.png" alt="Play Game" width="40%"> <img src="./screenshots/play game.png" alt="Game Over" width="40%">
+<img src="./screenshots/game over.png" alt="Play Game" width="50%"> <img src="./screenshots/play game.png" alt="Game Over" width="50%">
