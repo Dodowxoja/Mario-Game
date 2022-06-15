@@ -7,15 +7,17 @@ class MarioView extends StatefulWidget {
   State<MarioView> createState() => _MarioViewState();
 }
 
-class _MarioViewState extends State<MarioView> {
+class _MarioViewState extends State<MarioView> with TickerProviderStateMixin {
+  bool _isJump = false;
   bool gameOver = false;
   int ball = 0;
   double _jump = 1;
-  double _containerSpeed = 1.6;
+  double _wallSpeed = 1.6;
+
   @override
   void initState() {
     super.initState();
-    next();
+    wallSpeed();
     gameOverShowDialog(context);
     ballMario();
   }
@@ -33,19 +35,19 @@ class _MarioViewState extends State<MarioView> {
                 child: Stack(
                   children: [
                     //mario
-                    Container(
+                    Align(
                       alignment: Alignment(-0.7, _jump),
                       child: Image.asset(
                         'assets/images/run_forward.gif',
                         height: 100,
                       ),
                     ),
-                    //Container
+                    //Wall
                     Align(
-                      alignment: Alignment(_containerSpeed, 1),
+                      alignment: Alignment(_wallSpeed, 1),
                       child: Image.asset(
                         'assets/images/mario_wall.png',
-                        height: 80,
+                        height: 90,
                       ),
                     ),
                   ],
@@ -72,43 +74,47 @@ class _MarioViewState extends State<MarioView> {
         ),
         onTap: () async {
           gameOverShowDialog(context);
-          for (var i = 0; i < 16; i++) {
-            if (gameOver == false) {
-              if (i < 8) {
-                await Future.delayed(
-                  const Duration(milliseconds: 100),
-                  () {
-                    _jump -= 0.1;
-                    setState(() {});
-                  },
-                );
+          if (_isJump == false) {
+            _isJump = true;
+            for (var i = 0; i < 16; i++) {
+              if (gameOver == false) {
+                if (i < 8) {
+                  await Future.delayed(
+                    const Duration(milliseconds: 100),
+                    () {
+                      _jump -= 0.1;
+                      setState(() {});
+                    },
+                  );
+                } else {
+                  await Future.delayed(
+                    const Duration(milliseconds: 100),
+                    () {
+                      _jump += 0.1;
+                      gameOverShowDialog(context);
+                      setState(() {});
+                    },
+                  );
+                }
               } else {
-                await Future.delayed(
-                  const Duration(milliseconds: 100),
-                  () {
-                    _jump += 0.1;
-                    gameOverShowDialog(context);
-                    setState(() {});
-                  },
-                );
+                break;
               }
-            } else {
-              break;
             }
+            _isJump = false;
           }
         },
       ),
     );
   }
 
-  next() async {
+  wallSpeed() async {
     for (var i = 0; i <= i; i++) {
       if (gameOver == false) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          _containerSpeed -= 0.05;
+        await Future.delayed(const Duration(milliseconds: 50), () {
+          _wallSpeed -= 0.05;
           // sakrashi
-          if (_containerSpeed <= -1.6) {
-            _containerSpeed = 1.6;
+          if (_wallSpeed <= -1.6) {
+            _wallSpeed = 1.6;
           }
           gameOverShowDialog(context);
         });
@@ -134,9 +140,9 @@ class _MarioViewState extends State<MarioView> {
 
   gameOverShowDialog(BuildContext context) async {
     // kelib urilib teyib qolishi
-    if (_containerSpeed <= -0.35) {
+    if (_wallSpeed <= -0.35) {
       // sakrab otvotkanda teyib qolishi
-      if (_containerSpeed >= -1) {
+      if (_wallSpeed >= -1) {
         //sakraganda teyib qolishi
         if (_jump >= 0.65) {
           gameOver = true;

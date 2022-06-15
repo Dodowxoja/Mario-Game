@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mario/mario_animation.dart';
 import 'package:mario/mario_page.dart';
 import 'package:mario/mario_view.dart';
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mario',
       theme: ThemeData(),
-      home: MarioView(),
+      home: MarioAnimation(),
     );
   }
 }
