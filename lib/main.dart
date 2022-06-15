@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Mario',
       theme: ThemeData(),
-      home: MarioAnimation(),
+      home: const MarioAnimation(),
     );
   }
 }
