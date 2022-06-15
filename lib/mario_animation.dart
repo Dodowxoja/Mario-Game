@@ -22,7 +22,7 @@ class _MarioAnimationState extends State<MarioAnimation>
     animationControllerMario = AnimationController(
       vsync: this,
       lowerBound: 0.0,
-      upperBound: 170.0,
+      upperBound: 1.0,
       duration: const Duration(milliseconds: 500),
     );
 
@@ -168,6 +168,12 @@ class _MarioAnimationState extends State<MarioAnimation>
           ],
         ),
         onTap: () {
+          animationControllerMario = AnimationController(
+            vsync: this,
+            lowerBound: 0.0,
+            upperBound: 170.0,
+            duration: const Duration(milliseconds: 500),
+          );
           animationControllerMario!.forward();
           animationControllerMario!.addListener(() {
             setState(() {});
